@@ -1,34 +1,35 @@
-from playwright.sync_api import sync_playwright
+import requests
 
+API_URL = "https://www.bim.com.tr/api/bim/home"
 
 def run():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+    response = requests.get(API_URL, timeout=30)
+    response.raise_for_status()
 
-        page = browser.new_page()
+    data = response.json()
 
-        page.goto(
-            "https://www.bim.com.tr/categories/100/aktuel-urunler.aspx",
-            wait_until="domcontentloaded",
-            timeout=60000
-        )
+    products = []
 
-        page.wait_for_timeout(5000)
+    for section in data["widgets"]["aktuel"]:
+        for child in section.get("childs", []):
+            category = child.get("title", "")
 
-        print("=" * 50)
-        print("CURRENT URL:")
-        print(page.url)
-        print("=" * 50)
+            for item in child.get("products", []):
+                products.append({
+                    "id": item.get("sku"),
+                    "name": item.get("title"),
+                    "brand": item.get("brands_label"),
+                    "category": category,
+                    "price": item.get("special_price") or item.get("price"),
+                    "normal_price": item.get("price"),
+                    "image": item.get("photo"),
+                    "store": "BİM",
+                })
 
-        html = page.content()
+    print(f"{len(products)} ürün bulundu.")
 
-        print("=" * 50)
-        print("HTML START")
-        for r in page.context.requests:
-    print(r.url)
-        print("HTML END")
-        print("=" * 50)
+    return products
 
-        browser.close()
 
-    return []
+if __name__ == "__main__":
+    run()
