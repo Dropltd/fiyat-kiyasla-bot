@@ -1,35 +1,32 @@
+import json
 import requests
 
-API_URL = "https://www.bim.com.tr/api/bim/home"
+
+URL = "https://bim.veesk.net/service/v1.0/home/aktuel"
+
+HEADERS = {
+    "Content-Type": "application/json",
+    "X-App-version": "20241101"
+}
+
 
 def run():
-    response = requests.get(API_URL, timeout=30)
-    response.raise_for_status()
+    response = requests.post(
+        URL,
+        headers=HEADERS,
+        json={"token": ""},
+        timeout=30,
+    )
+
+    print("Status Code:", response.status_code)
+
+    if response.status_code != 200:
+        print(response.text)
+        return
 
     data = response.json()
 
-    products = []
+    with open("output.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
-    for section in data["widgets"]["aktuel"]:
-        for child in section.get("childs", []):
-            category = child.get("title", "")
-
-            for item in child.get("products", []):
-                products.append({
-                    "id": item.get("sku"),
-                    "name": item.get("title"),
-                    "brand": item.get("brands_label"),
-                    "category": category,
-                    "price": item.get("special_price") or item.get("price"),
-                    "normal_price": item.get("price"),
-                    "image": item.get("photo"),
-                    "store": "BİM",
-                })
-
-    print(f"{len(products)} ürün bulundu.")
-
-    return products
-
-
-if __name__ == "__main__":
-    run()
+    print("output.json oluşturuldu.")
