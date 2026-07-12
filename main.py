@@ -16,4 +16,7 @@ response = requests.post(
 
 data = response.json()
 
-print(json.dumps(data, indent=2, ensure_ascii=False))
+with open("output.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+print("JSON kaydedildi.")
