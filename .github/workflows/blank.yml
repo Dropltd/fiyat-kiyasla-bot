@@ -4,26 +4,26 @@ on:
   workflow_dispatch:
 
   schedule:
-    - cron: "0 9,13,19 * * *"
+    - cron: '0 */6 * * *'
 
 jobs:
-  run-bot:
+  market-bot:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Kodu indir
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Python Kur
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Kütüphaneleri Kur
+      - name: Install dependencies
         run: |
           pip install -r requirements.txt
 
-      - name: Botu Çalıştır
+      - name: Run Bot
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
