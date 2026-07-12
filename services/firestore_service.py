@@ -1,42 +1,18 @@
-"""
-Firestore Service
-"""
+from firebase_admin import firestore
 
-from firebase import get_firestore
-from models.product import Product
-from utils.helpers import generate_document_id
-
-db = get_firestore()
+db = firestore.client()
 
 
-def save_product(product: Product):
+def save_products(products):
+    collection = db.collection("products")
 
-    document_id = generate_document_id(
-        f"{product.market}-{product.title}-{product.price}"
-    )
+    count = 0
 
-    ref = db.collection("market_aktuel").document(document_id)
+    for product in products:
+        sku = product["sku"]
 
-    if ref.get().exists:
-        return False
+        collection.document(str(sku)).set(product)
 
-    ref.set(
-        {
-            "market": product.market,
-            "title": product.title,
-            "price": product.price,
-            "oldPrice": product.old_price,
-            "discount": product.discount,
-            "imageUrl": product.image_url,
-            "productUrl": product.product_url,
-            "category": product.category,
-            "campaignTitle": product.campaign_title,
-            "startDate": product.start_date,
-            "endDate": product.end_date,
-            "stock": product.stock,
-            "barcode": product.barcode,
-            "createdAt": product.created_at,
-        }
-    )
+        count += 1
 
-    return True
+    print(f"{count} ürün Firestore'a kaydedildi.")
