@@ -2,9 +2,11 @@ from scraper.bim import run
 
 
 def main():
-    print("Fiyat Kıyasla Bot Başladı")
-    run()
-    print("Bot Tamamlandı")
+    print("=== Fiyat Kıyasla Botu ===")
+
+    products = run()
+
+    print(f"Toplam ürün: {len(products)}")
 
 
 if __name__ == "__main__":
