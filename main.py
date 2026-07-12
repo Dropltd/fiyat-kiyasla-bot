@@ -1,4 +1,5 @@
 from scraper.bim import run
+from services.firestore_service import save_products
 
 
 def main():
@@ -6,7 +7,11 @@ def main():
 
     products = run()
 
-    print(f"Toplam ürün: {len(products)}")
+    print(f"{len(products)} ürün çekildi.")
+
+    save_products(products)
+
+    print("İşlem tamamlandı.")
 
 
 if __name__ == "__main__":
