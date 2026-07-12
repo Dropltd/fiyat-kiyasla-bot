@@ -1,4 +1,5 @@
 import requests
+import json
 
 url = "https://bim.veesk.net/service/v1.0/home/aktuel"
 
@@ -13,5 +14,6 @@ response = requests.post(
     json={"token": ""}
 )
 
-print(response.status_code)
-print(response.text[:3000])
+data = response.json()
+
+print(json.dumps(data, indent=2, ensure_ascii=False))
