@@ -7,9 +7,12 @@ def run():
         page = browser.new_page()
 
         page.goto(
-            "https://www.bim.com.tr/categories/100/aktuel-urunler.aspx",
-            wait_until="networkidle",
-            timeout=60000
+    "https://www.bim.com.tr/categories/100/aktuel-urunler.aspx",
+    wait_until="networkidle",
+    timeout=60000
+)
+
+html = page.content()
         )
 
         html = page.content()
