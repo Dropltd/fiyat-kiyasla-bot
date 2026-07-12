@@ -24,7 +24,8 @@ def run():
 
         print("=" * 50)
         print("HTML START")
-        print(html[:5000])
+        for r in page.context.requests:
+    print(r.url)
         print("HTML END")
         print("=" * 50)
 
