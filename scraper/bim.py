@@ -17,7 +17,7 @@ def run():
         with open("page.html", "w", encoding="utf-8") as f:
             f.write(html)
 
-        printprint(html[:5000])
+        print(html[:5000])
 
         browser.close()
 
